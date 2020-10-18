@@ -150,7 +150,7 @@ with the help of a bar graph or a pie chart and are as follows.
 
 <figure>
   <img style="width: 100%;"
-       src="/assets/images/10-complete-responses.png"
+       src="/assets/images/10-manual.png"
        alt="Summary of response 10">
 </figure>
 
