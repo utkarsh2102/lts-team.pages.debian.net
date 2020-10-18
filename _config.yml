@@ -1,0 +1,43 @@
+theme: minima
+#remote_theme: jekyll/minima
+title: The Debian LTS Team Pages
+description: >
+  Debian Long Term Support (LTS) is a project to extend the lifetime of all
+  Debian stable releases to (at least) 5 years. Debian LTS is not handled
+  by the Debian security team, but by a separate group of volunteers and
+  companies interested in making it a success.
+author: The Debian LTS Team
+email: debian-lts@lists.debian.org
+lang: en
+url: https://lts-team.pages.debian.net
+
+header_pages:
+  - Wiki.md
+
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+
+rss: rss
+facebook_username: debian
+flickr_username: debian
+linkedin_username: debian
+twitter_username: debian
+
+jekyll-mentions:
+  base_url: https://salsa.debian.org
+
+plugins:
+  - jekyll-feed
+  - jekyll-last-modified-at
+  - jekyll-mentions
+  - jekyll-optional-front-matter
+  - jekyll-redirect-from
+  - jekyll-seo-tag
+  - jekyll-sitemap
+#  - jekyll-remote-theme
+
+# vim: set tw=79 ts=2 sw=2 ai si et:

@@ -1,0 +1,64 @@
+image: ruby:2.5
+  
+variables:
+  JEKYLL_ENV: production
+  JEKYLL_BUILD_PATH: "./build"
+  DEPLOY_PATH: "./public"
+  NOKOGIRI_USE_SYSTEM_LIBRARIES: "true"
+  LC_ALL: C.UTF-8
+  LANG: C.UTF-8
+  APT_CACHE_DIR: '/var/cache/apt/archives/'
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - vendor/ruby
+    - tmp/.htmlproofer
+    - /var/cache/apt/archives/
+
+before_script:
+  - apt-get update -qq
+  - apt-get install -qq -y libcurl4-openssl-dev locales-all
+  - bundle install -j $(nproc) --path vendor
+
+.build-common:
+  stage: build
+  script:
+    - bundle exec jekyll build -d ${JEKYLL_BUILD_PATH}
+  artifacts:
+    paths:
+      - ${JEKYLL_BUILD_PATH}
+
+.test-common:
+  stage: test
+  script:
+    - bundle exec htmlproofer ${JEKYLL_BUILD_PATH} --check-external-hash
+                                                   --check-opengraph
+                                                   --check-sri
+                                                   --check-html
+                                                   --http-status-ignore 999
+                                                   --typhoeus-config '{ "ssl_verifypeer":false }'
+                                                   --url-swap 'https?\://lts-team.pages.debian.net:'
+                                                   --timeframe 4w
+  artifacts:
+    paths:
+      - tmp/.htmlproofer
+
+build:
+  extends: .build-common
+
+test:
+  extends: .test-common
+
+pages:
+  stage: deploy
+  when: on_success
+  script:
+    - mv ${JEKYLL_BUILD_PATH} ${DEPLOY_PATH}
+  artifacts:
+    paths:
+      - ${DEPLOY_PATH}
+  only:
+    - master
+
+# vim: set tw=79 ts=2 sw=2 ai si et:
